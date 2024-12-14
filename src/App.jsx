@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 import {db} from './firebase-config.js'
 import {collection, getDocs, addDoc, updateDoc, doc, deleteDoc} from 'firebase/firestore'
+import UpdateUser from './UpdateUser.jsx'
 import './App.css'
 
 function App() {
 //hooks
 const [newName, setNewName] = useState('')
 const [newAge, setNewAge] = useState(0)
-  const [users, setUsers] = useState([])
-  const usersCollectionRef = collection(db, "users")
+const [users, setUsers] = useState([])
+const [selectUser, setSelectUser] = useState(null)
+const usersCollectionRef = collection(db, "users")
 
 //logics
 //pang Create ng data sa firebase
@@ -24,12 +26,13 @@ const [newAge, setNewAge] = useState(0)
     }
     getUsers()
   }, [])
+
 // pang update ng mga data's
-  const updateUser = async (id, age) => {
-    const userDoc = doc(db, "users", id)
-    const newFields = {age: age + 1}
-    await updateDoc(userDoc, newFields)
-  }
+  // const updateUser = async (id, age) => {
+  //   const userDoc = doc(db, "users", id)
+  //   const newFields = {age: age + 1}
+  //   await updateDoc(userDoc, newFields)
+  // }
 //pang delete
   const deleteUser = async (id) => {
     const userDoc = doc(db, "users", id)
@@ -50,12 +53,20 @@ const [newAge, setNewAge] = useState(0)
         {users.map((user) => {
           return <><div><h1>Name: {user.name} </h1></div>
            <div><h1>Age: {user.age} </h1></div>
-           <button onClick={() => {updateUser(user.id, user.age)}}>increase age</button>
+           <button onClick={() => setSelectUser(user)}>Update</button>
            <button onClick={() => {deleteUser(user.id)}} >Delete</button>
            </>
         })}
            </div>
     </div>
+
+     {/* Show UpdateUser Component */}
+      {selectUser && (
+        <UpdateUser
+          user={selectUser}
+          onClose={() => setSelectUser(null)}
+        />
+      )}
     </>
   )
 }
