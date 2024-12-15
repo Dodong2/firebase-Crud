@@ -27,7 +27,7 @@ const createUser = async () => {
       const q = query(usersCollectionRef, orderBy("createdAt", "desc"))
       const data = await getDocs(q)
       // console.log(data)
-      setUsers(data.docs.map((doc) =>({ ...doc.data(), id: doc.id })))
+      setUsesetrs(data.docs.map((doc) =>({ ...doc.data(), id: doc.id })))
     }
     getUsers()
   }, [])
